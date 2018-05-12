@@ -1,0 +1,383 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>How Browsers Work</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>HOW BROWSERS WORK</h1>
+                <img height="315" src="img/browsericons.png" alt="Browser icons">
+                <p>
+                    <small>Created by
+                        <a href="https://github.com/rolling-scopes-school/ollyyasinski-2018Q1">Volha Yasinskaya</a>
+                    </small>
+                </p>
+            </section>
+            <section>
+                <h1>Agenda</h1>
+                <ul>
+                    <li>Browser Structure</li>
+                    <li>Rendering Engine</li>
+                    <li>Parsing Process</li>
+                    <li>Render Tree</li>
+                    <li>Layout</li>
+                    <li>Paint</li>
+                    <li>Summary</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Browser Stucture</h2>
+                <img height="500" src="img/browser-structure.png" alt="Browser Structure">
+                <p style="font-size: 16px; margin:0px">
+                    <i>Source:
+                        <a href="http://taligarsiel.com/Projects/howbrowserswork1.htm">http://taligarsiel.com/Projects/howbrowserswork1.htm</a>
+                    </i>
+                </p>
+                <aside class="notes">
+                    <ul>
+                        <li>
+                            <b>User Interface </b>- everything you see except the web page itself. E.g.,
+                            <ul>
+                                <li>address bar</li>
+                                <li>back/forward/refresh button</li>
+                                <li>tab management area</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <b>Browser Engine </b>provides a high-level interface for querying and manipulating the Rendering
+                            Engine.
+                        </li>
+                        <li>
+                            <b>Rendering Engine </b>displays requested content. The vast majority of the time, this is HTML
+                            + CSS. But not always. With the help of plugins also PDF and XML documents</li>
+                        <li>
+                            <b>Networking Component </b>is responsible for handling network tasks:
+                            <ul>
+                                <li>HTTP Requests</li>
+                                <li>HTTP Requests - WebSockets (Duplex connections over TCP)</li>
+                                <li>WebRTC (Uses Real-Time Transport Protocol, which uses UDP)</li>
+                        </li>
+                        </ul>
+                        <li>
+                            <b>JavaScript Engine </b> executes JS.
+                        </li>
+                        <li>
+                            <b>UI Backend </b> draws everything in the browser, both in the User Interface and in the Rendering
+                            Engine
+                        </li>
+                        <li>
+                            <b>Data Storage </b> is used for persisting data locally. Used for:
+                            <ul>
+                                <li>HTTP Cookies</li>
+                                <li>Browser Caching</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <i>Source:
+                        <a href="https://codeburst.io/how-browsers-work-6350a4234634">https://codeburst.io/how-browsers-work</a>
+                    </i>
+                </aside>
+            </section>
+            <section>
+                <section>
+                    <h1>Rendering Engine</h1>
+                </section>
+                <section>
+                    <img src="img/rendering-process.png">
+                    <p style="font-size: 16px; margin:0px">
+                        <i>Source:
+                            <a href="https://codeburst.io/how-browsers-work-6350a4234634">https://codeburst.io/how-browsers-work</a>
+                        </i>
+                    </p>
+                    <aside class="notes">
+                        <p>
+                            <ol>
+                                <li>First, the Rendering Engine retrieves the Requested Resources from the Network Component.</li>
+                                <li>Then: HTML is parsed to create the DOM Tree. CSS is parsed to create the CSSOM Tree. DOM
+                                    Tree + CSSOM Tree= Render Tree.</li>
+                                <li>The Render Tree is a tree of styled DOM nodes. It is a tree of boxes complete with their
+                                    cosmetic characteristics: color, dimensions, etc.</li>
+                                <li>Each render-tree node is laid-out. Each render-tree node learns its exact positional coordinates
+                                    on the screen. The Render Tree is traversed. Each node is painted onto the screen using
+                                    the UI Backend.
+                                </li>
+                            </ol>
+                        </p>
+                    </aside>
+                </section>
+                <section>
+                    <img src="img/not-real-rendering.png" alt="Not real rendering example">
+                    <p style="font-size: 16px;margin:0px;">
+                        <i>Source:
+                            <a href="https://codeburst.io/how-browsers-work-6350a4234634">https://codeburst.io/how-browsers-work</a>
+                        </i>
+                        <aside class="notes">
+                            <p>Actually it doesn't work exactly this way. The rendering process is a gradual, asynchronous process.
+                                For a better user experience, the rendering engine will attempt to render content ASAP: it
+                                won’t wait until all the requested resources return from the networking component to begin
+                                painting render-tree nodes. It won’t even wait until all the HTML is parsed. It will parse
+                                & render the HTML/CSS in chunks.</p>
+                        </aside>
+                    </p>
+                </section>
+                <section>
+                    <img src="img/real-rendering.png" alt="real rendering example">
+                    <p style="font-size: 16px; margin:0px">
+                        <i>Source:
+                            <a href="https://codeburst.io/how-browsers-work-6350a4234634">https://codeburst.io/how-browsers-work</a>
+                        </i>
+                    </p>
+                </section>
+                <section>
+                    <h2>Browser Rendering Engines</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Browser</th>
+                                <th>Rendering Engine</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img style="width:40px; border:0px; background-color: transparent;" src="img/safari-logo.png" alt="Safari logo">
+                                </td>
+                                <td style="vertical-align: middle;">WebKit</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img style="width:40px; border:0px; background-color: transparent;" src="img/chrome-logo.png" alt="Chrome logo">
+                                </td>
+                                <td style="vertical-align: middle;">Blink</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img style="width:40px; border:0px; background-color: transparent;" src="img/opera-logo.png" alt="Opera logo">
+                                </td>
+                                <td style="vertical-align: middle;">Blink</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img style="width:40px; border:0px; background-color: transparent;" src="img/firefox-logo.png" alt="Firefox logo">
+                                </td>
+                                <td style="vertical-align: middle;">Gecko</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img style="width:40px; border:0px; background-color: transparent;" src="img/edge-logo.png" alt="Edge logo">
+                                </td>
+                                <td style="vertical-align: middle;">EdgeHTML</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Parsing Process</h1>
+                </section>
+                <section>
+                    <p>
+                        <b>Parsing </b> - translating a document into a structure that code can use.</p>
+                    <img height="200" src="img/grammar.png" alt="grammar tree">
+                </section>
+                <section>
+                    <img src="img/parsing-flow.png" alt="Parcing Flow">
+                    <p style="font-size: 16px; margin:0px;">
+                        <i>Source:
+                            <a href="https://codeburst.io/how-browsers-work-6350a4234634">https://codeburst.io/how-browsers-work</a>
+                        </i>
+                    </p>
+                    <aside class="notes">
+                        Parsing - translating a document into a structure that code can use.
+                        <br> Grammar is based on vocabulary and syntax rules.
+                        <br> Lexer ( Tokenizer) - create tokens
+                        <br> Parser - apply the syntax rules
+                    </aside>
+                </section>
+                <section>
+                    <h2>HTML Parsing</h2>
+                    <p>HTML’s lexicon consists of 6 tokens:</p>
+                    <ul>
+                        <li>DOCTYPE</li>
+                        <li>Start Tag</li>
+                        <li>End Tag</li>
+                        <li>Comment</li>
+                        <li>Character</li>
+                        <li>End-of-file</li>
+                    </ul>
+                </section>
+                <section>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px; height: 250px">
+                            &lt;!DOCTYPE html&gt;
+                            &lt;html lang="en-US"&gt;
+                                &lt;head&gt;
+                                    &lt;meta charset="UTF-8"&gt;
+                                    &lt;meta name="author" content="Volha Yasinskaya"&gt;
+                                &lt;/head&gt;
+                                &lt;body&gt;
+                                    &lt;p&gt;
+                                        This is text in a paragraph.
+                                        &lt;img src="img/test.jpg"&gt;
+                                    &lt;/p&gt;
+                                    &lt;div&gt;
+                                        This is text in a div.
+                                &lt;/body&gt;
+                            &lt;/html&gt;</code></pre>
+                    <img src="img/html-dom.png" style="border: 0px;">
+                </section>
+                <section>
+                    <h2>Parsers</h2>
+                    <ul>
+                        <li>Flex</li>
+                        <li>Lex</li>
+                        <li>Yacc</li>
+                        <li>Bison</li>
+                    </ul>
+                    <p>Webkit uses Flex (lexer) and Bison (parser)</p>
+                    <aside class="notes">
+                        <p>Lexers and parsers are typically not written from scratch. That would be very difficult. There are
+                            tools for generating lexers & parsers simply by feeding them a language’s lexicon and syntax
+                            respectively. WebKit uses 2 such tools: Flex and Bison.</p>
+                    </aside>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Render Tree</h1>
+                </section>
+                <section>
+                    <p>
+                        <b>Render Tree </b>holds visual nodes (i.e. things that will actually appear on the page)</p>
+                    <img src="img/render-tree.jpg" alt="Render Tree">
+                    <aside class="notes">
+                        While the DOM Tree and the CSSOM Tree are being constructed, they are combined to form a third tree: the Render Tree. This
+                        tree holds visual nodes (i.e. things that will actually appear on the page). These nodes are called
+                        Render Objects/Renderers in WebKit (Chrome, Safari, Opera) and Frames in Gecko (Firefox). HTML uses
+                        an intuitive flow-based layout model by default. This means that elements are laid-out in the order
+                        that they appear: left-to-right, top-to-bottom.
+                    </aside>
+                </section>
+            </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Layout</h1>
+                    <aside class="notes">
+                        Layout calculates position and size. Most of the time it is possible to compute geometry in one pass. Recursive process begins
+                        at the root object.
+                    </aside>
+                </section>
+                <section>
+                    <iframe width="643" height="537" src="https://www.youtube.com/embed/ZTnIxIA5KGw" frameborder="0" allow="autoplay; encrypted-media"
+                        allowfullscreen></iframe>
+                </section>
+                <section>
+                    <h3 style="color: #007791;">Dirty Bit System</h3>
+                    <p>It is a system that makes sure that browsers don't need to do the full layout on every interaction.</p>
+                    <h3 style="color: #007791;">GLOBAL LAYOUT</h3>
+                    <p>Global layout is required when changes affect all render objects, e.g.:</p>
+                    <ul>
+                        <li>A global style change, like changing all font-family or font-size values</li>
+                        <li>Resizing the screen</li>
+                    </ul>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Paint</h1>
+                </section>
+                <section>
+                    <p>Render tree is being traversed and the paint() method is used to display content on the page.</p>
+                    <aside class="notes">
+                        <p>In the painting stage, the render tree is traversed and the renderer's "paint()" method is called
+                            to display content on the screen. Painting uses the UI infrastructure component.</p>
+                    </aside>
+                </section>
+                <section>
+                    <h2>GLOBAL & LOCAL PAINTING</h2>
+                    <p>Similar to the rendering process, painting can either be global or local. Regions of the content are
+                        flagged as dirty to enable local paints. Then, the rendering engine invokes the UI Backend component
+                        of the browser to actually repaint the dirty regions. </p>
+                </section>
+                <section>
+                    <h2>THE PAINTING ORDER</h2>
+                    <p>Render objects have many layers on the z-axis. Their painting order (from back to front) is:</p>
+                    <ol>
+                        <li>Background Color</li>
+                        <li>Background Image</li>
+                        <li>Border</li>
+                        <li>Children Render Objects</li>
+                        <li>Outline</li>
+                    </ol>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h1>Summary</h1>
+                </section>
+                <section>
+                    <h2>Browser Stucture</h2>
+                    <img height="500" src="img/browser-structure.png" alt="Browser Structure">
+                    <p style="font-size: 16px; margin:0px">
+                        <i>Source:
+                            <a href="http://taligarsiel.com/Projects/howbrowserswork1.htm">http://taligarsiel.com/Projects/howbrowserswork1.htm</a>
+                        </i>
+                    </p>
+                </section>
+                <section>
+                    <img src="img/rendering-process.png">
+                    <p style="font-size: 16px; margin:0px">
+                        <i>Source:
+                            <a href="https://codeburst.io/how-browsers-work-6350a4234634">https://codeburst.io/how-browsers-work</a>
+                        </i>
+                    </p>
+                </section>
+            </section>
+            <section>
+                <img height=500 src="img/thank-you.jpg" alt="Thank you!">
+            </section>
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            dependencies: [
+                { src: 'plugin/markdown/marked.js' },
+                { src: 'plugin/markdown/markdown.js' },
+                { src: 'plugin/notes/notes.js', async: true },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } }
+            ]
+        });
+    </script>
+</body>
+
+</html>
